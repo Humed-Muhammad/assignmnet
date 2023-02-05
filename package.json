@@ -6,6 +6,12 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "eslint": "eslint --ext js,ts,tsx",
+    "lint": "yarn run eslint src --cache",
+    "lint:commit": "yarn run eslint $(git diff --name-only HEAD)",
+    "lint:fix": "yarn run eslint --fix src",
+    "lint:css": "stylelint src/**/*.css",
+    "prettify": "prettier --write",
     "preview": "vite preview"
   },
   "lint-staged": {
