@@ -1,10 +1,10 @@
-import { Drizzle, IDrizzleOptions } from "@drizzle/store";
-import MemberRole from "utils/abi/MemberRole.json";
+import { Drizzle, IDrizzleOptions } from '@drizzle/store';
+import MemberRole from 'utils/abi/MemberRole.json';
 
 const drizzleOptions: IDrizzleOptions = {
   contracts: [MemberRole],
   events: {
-    MemberRole: ["RoleAdded", "StateChanged"],
+    MemberRole: ['RoleAdded', 'StateChanged'],
   },
 };
 
