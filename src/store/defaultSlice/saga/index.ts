@@ -2,7 +2,7 @@ import { put, select, takeLatest } from 'redux-saga/effects';
 import { actions } from '../slice';
 
 import { ethereum } from '../../../utils/constant';
-import { BigNumber, ethers, Signer } from 'ethers';
+import { ethers, Signer } from 'ethers';
 import { getLotteryData } from '../../../utils/helpers';
 import { selectConnectedAccount } from '../slice/selector';
 
