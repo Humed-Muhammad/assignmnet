@@ -24,13 +24,15 @@
   },
   "dependencies": {
     "@chakra-ui/react": "^2.4.9",
-    "@drizzle/react-plugin": "^1.5.3",
-    "@drizzle/store": "^1.5.3",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "@reduxjs/toolkit": "^1.9.2",
+    "ethers": "^6.0.2",
     "framer-motion": "^9.0.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-redux": "^8.0.5",
+    "redux-saga": "^1.2.2"
   },
   "devDependencies": {
     "@types/node": "^18.11.3",
@@ -45,6 +47,7 @@
     "eslint-plugin-n": "^15.0.0",
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-react": "^7.31.8",
+    "ganache": "^7.7.4",
     "prettier": "^2.7.1",
     "typescript": "^4.9.3",
     "vite": "^4.1.0"
