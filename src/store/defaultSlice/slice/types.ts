@@ -10,4 +10,16 @@ export interface DefaultSliceTypes {
   connectingWallet: boolean;
   checkingIfWalletIsConnected: boolean;
   message: MessageTypes;
+  roles: string[];
+  usersAddress: string[] | undefined;
+  membersCount: number | undefined;
+  roleTypesCount: number | undefined;
+}
+
+export interface IGetContractDataTypes {
+  roles: string[];
+  usersAddress: string[];
+  membersCount: number | undefined;
+  roleTypesCount: number | undefined;
+  contract: Omit<Contract, 'none'> | undefined;
 }
