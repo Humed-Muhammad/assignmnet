@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Contract } from 'ethers';
 
 import { MessageTypes } from '../../commonTypes';
-import { DefaultSliceTypes } from './types';
+import { DefaultSliceTypes, IGetContractDataTypes } from './types';
 
 const initialState: DefaultSliceTypes = {
   contract: undefined,
@@ -16,6 +16,10 @@ const initialState: DefaultSliceTypes = {
     type: 'success',
     content: '',
   },
+  roles: [],
+  usersAddress: [],
+  membersCount: undefined,
+  roleTypesCount: undefined,
 };
 
 export const defaultSlice = createSlice({
@@ -42,12 +46,19 @@ export const defaultSlice = createSlice({
     requestContract: state => {
       state.gettingContract = true;
     },
+    finishRequestingContractData: (
+      state,
+      action: PayloadAction<IGetContractDataTypes>,
+    ) => {
+      state.contract = action.payload.contract;
+      state.roles = action.payload.roles;
+      state.usersAddress = action.payload.usersAddress;
+      state.membersCount = action.payload.membersCount;
+      state.roleTypesCount = action.payload.roleTypesCount;
+    },
     setContract: (state, action: PayloadAction<Contract>) => {
       state.contract = action.payload;
       state.gettingContract = false;
-    },
-    getDefaultData: state => {
-      state.fetchingDatas = true;
     },
 
     setMessages: (state, action: PayloadAction<MessageTypes>) => {

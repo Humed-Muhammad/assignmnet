@@ -5,6 +5,7 @@ import { ethereum } from '../../../utils/constant';
 import { ethers, Signer } from 'ethers';
 import { getLotteryData } from '../../../utils/helpers';
 import { selectConnectedAccount } from '../slice/selector';
+import { IGetContractDataTypes } from '../slice/types';
 
 /* This function is responsible for checking if the user has connected their wallet. */
 function* checkIfWalletIsConnectedSaga() {
@@ -32,7 +33,7 @@ function* checkIfWalletIsConnectedSaga() {
       );
     } else {
       yield put(actions.setConnectedWallet(accounts[0]));
-      yield put(actions.getDefaultData());
+
       yield put(actions.setIsWalletIsConnected(true));
       yield put(
         actions.setMessages({
@@ -67,7 +68,6 @@ function* requestWalletConnectionsSaga() {
       method: 'eth_requestAccounts',
     });
     yield put(actions.finishedWalletConnection());
-    yield put(actions.getDefaultData());
   } catch ({ message }) {
     yield put(
       actions.setMessages({
@@ -80,7 +80,6 @@ function* requestWalletConnectionsSaga() {
 }
 
 function* getContractData() {
-  console.log('first');
   try {
     /* Creating a provider for the ethers.js library. */
     const provider: { getSigner: () => object } =
@@ -92,13 +91,38 @@ function* getContractData() {
     const signer: Signer = yield provider.getSigner();
 
     /***@Data From Contract */
-    const data: [] = yield getLotteryData({
+    const data: IGetContractDataTypes = yield getLotteryData({
       signer,
       connectedAccount,
-      gasLimit: 68000000000,
     });
+
+    if (data) {
+      yield put(actions.finishRequestingContractData(data));
+    }
     // console.log(data);
-  } catch (error) {
+  } catch (error: any) {
+    if (error?.code === 'INSUFFICIENT_FUNDS') {
+      yield put(
+        actions.setMessages({
+          content: 'Insufficient funds for intrinsic transaction cost',
+          type: 'error',
+        }),
+      );
+    } else if (error?.code === 'UNPREDICTABLE_GAS_LIMIT') {
+      yield put(
+        actions.setMessages({
+          content: 'Can not estimate gas limit for transaction!',
+          type: 'error',
+        }),
+      );
+    } else {
+      yield put(
+        actions.setMessages({
+          content: 'Error occurred during transaction!',
+          type: 'error',
+        }),
+      );
+    }
     console.log(error);
   }
 }
