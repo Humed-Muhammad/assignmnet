@@ -80,10 +80,11 @@ function* requestWalletConnectionsSaga() {
 }
 
 function* getContractData() {
+  console.log('first');
   try {
     /* Creating a provider for the ethers.js library. */
     const provider: { getSigner: () => object } =
-      yield new ethers.BrowserProvider(ethereum);
+      yield new ethers.providers.Web3Provider(ethereum);
 
     const connectedAccount: string = yield select(selectConnectedAccount);
 
@@ -94,7 +95,7 @@ function* getContractData() {
     const data: [] = yield getLotteryData({
       signer,
       connectedAccount,
-      gasPrice: 2200000,
+      gasLimit: 68000000000,
     });
     // console.log(data);
   } catch (error) {
