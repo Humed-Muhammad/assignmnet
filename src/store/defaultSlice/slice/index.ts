@@ -2,7 +2,11 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Contract } from 'ethers';
 
 import { MessageTypes } from '../../commonTypes';
-import { DefaultSliceTypes, IGetContractDataTypes } from './types';
+import {
+  DefaultSliceTypes,
+  IAssignRoleTypes,
+  IGetContractDataTypes,
+} from './types';
 
 const initialState: DefaultSliceTypes = {
   contract: undefined,
@@ -21,6 +25,7 @@ const initialState: DefaultSliceTypes = {
   membersCount: undefined,
   roleTypesCount: undefined,
   creatingRole: false,
+  assigningRole: false,
 };
 
 export const defaultSlice = createSlice({
@@ -70,6 +75,12 @@ export const defaultSlice = createSlice({
     },
     finishedCreatingRole: state => {
       state.creatingRole = false;
+    },
+    assignRole: (state, action: PayloadAction<IAssignRoleTypes>) => {
+      state.assigningRole = true;
+    },
+    finishedAssigningRole: state => {
+      state.assigningRole = false;
     },
   },
 });

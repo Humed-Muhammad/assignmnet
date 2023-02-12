@@ -15,6 +15,7 @@ export interface DefaultSliceTypes {
   membersCount: number | undefined;
   roleTypesCount: number | undefined;
   creatingRole: boolean;
+  assigningRole: boolean;
 }
 
 export interface IGetContractDataTypes {
@@ -23,4 +24,9 @@ export interface IGetContractDataTypes {
   membersCount: number | undefined;
   roleTypesCount: number | undefined;
   contract: Omit<Contract, 'none'> | undefined;
+}
+
+export interface IAssignRoleTypes {
+  roleName: string;
+  address: string;
 }
