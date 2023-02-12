@@ -3,7 +3,7 @@ import { FADE_IN_ANIMATION_SETTINGS } from '../utils/constant';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import { ReactNode } from 'react';
-import useScroll from '../utils/hooks/use-scroll';
+import useScroll from '../utils/hooks';
 
 export function Layout({
   children,
