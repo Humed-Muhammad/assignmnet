@@ -28,7 +28,6 @@ export const getSmartContractData = async (
 
   const roles = await contract?.getAllRoleTypes();
   const addresses = await contract?.getAllAdressess();
-  console.log(roles, addresses);
 
   return {
     contract,
