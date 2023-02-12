@@ -27,12 +27,7 @@ export function Layout({
             : 'bg-white/0'
         } z-30 transition-all`}
       >
-        <div className="mx-5 flex h-16 max-w-screen-xl items-center justify-between xl:mx-auto">
-          <div className="font-display flex items-center text-2xl">
-            <p className="text-center font-bold text-gray-600 md:text-xl">
-              Members Role
-            </p>
-          </div>
+        <div className="mx-5 flex h-16 max-w-screen-xl items-center justify-end xl:mx-auto">
           <div>
             <AnimatePresence>
               <motion.button
