@@ -30,6 +30,7 @@ import { ChakraTable } from './components/Core/ChakraTable';
 import { Stats } from './components/Stats';
 import { Plus } from 'react-feather';
 import { ChakraModal } from './components/ChakraModal';
+import { useEventListener } from './utils/hooks';
 
 function App() {
   const [roleName, setRoleName] = useState<string>('');
@@ -50,10 +51,11 @@ function App() {
 
   useEffect(() => {
     if (connectedAccount) {
-      console.log('first');
       dispatch(defaultActions.requestContract());
     }
   }, [connectedAccount]);
+
+  useEventListener();
 
   useEffect(() => {
     if (message.content) {
@@ -180,6 +182,7 @@ function App() {
         </Card>
       </motion.div>
       <ChakraModal
+        loading={stateData.creatingRole}
         command={() => {
           dispatch(defaultActions.createRole(roleName));
         }}
