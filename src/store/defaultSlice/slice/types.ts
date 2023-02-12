@@ -14,6 +14,7 @@ export interface DefaultSliceTypes {
   usersAddress: string[] | undefined;
   membersCount: number | undefined;
   roleTypesCount: number | undefined;
+  creatingRole: boolean;
 }
 
 export interface IGetContractDataTypes {

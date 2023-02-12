@@ -20,6 +20,7 @@ const initialState: DefaultSliceTypes = {
   usersAddress: [],
   membersCount: undefined,
   roleTypesCount: undefined,
+  creatingRole: false,
 };
 
 export const defaultSlice = createSlice({
@@ -63,6 +64,12 @@ export const defaultSlice = createSlice({
 
     setMessages: (state, action: PayloadAction<MessageTypes>) => {
       state.message = action.payload;
+    },
+    createRole: (state, action: PayloadAction<string>) => {
+      state.creatingRole = true;
+    },
+    finishedCreatingRole: state => {
+      state.creatingRole = false;
     },
   },
 });
