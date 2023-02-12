@@ -25,23 +25,23 @@ export const Stats = () => {
       p={5}
       flexWrap={['wrap', 'nowrap', 'nowrap']}
     >
-      <Card p={2} width={'64'}>
+      <Card p={2} pl={4} width={'64'}>
         <Stat>
           <StatLabel>Members with role</StatLabel>
           <StatNumber>{stateData.membersCount}</StatNumber>
           <StatHelpText>
             <StatArrow type="increase" />
-            {stateData?.membersCount && stateData?.membersCount + 5} %
+            {stateData?.membersCount && stateData?.membersCount} %
           </StatHelpText>
         </Stat>
       </Card>
-      <Card p={2} width={'64'}>
+      <Card p={2} pl={4} width={'64'}>
         <Stat>
           <StatLabel>Total roles</StatLabel>
           <StatNumber>{stateData.roleTypesCount}</StatNumber>
           <StatHelpText>
             <StatArrow type="increase" />
-            {stateData?.roleTypesCount && stateData?.roleTypesCount + 5} %
+            {stateData?.roleTypesCount && stateData?.roleTypesCount} %
           </StatHelpText>
         </Stat>
       </Card>

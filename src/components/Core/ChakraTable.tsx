@@ -1,7 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
+  Button,
   Center,
   Flex,
+  FormControl,
+  FormLabel,
+  Input,
+  Select,
   Spinner,
   Table,
   TableContainer,
@@ -12,11 +17,19 @@ import {
   Th,
   Thead,
   Tr,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { CloudOff } from 'react-feather';
 import styled from '@emotion/styled';
-import { selectConnectedAccount } from '../../store/defaultSlice/slice/selector';
-import { useSelector } from 'react-redux';
+import {
+  selectAllDefaultSlice,
+  selectConnectedAccount,
+} from '../../store/defaultSlice/slice/selector';
+import { useDispatch, useSelector } from 'react-redux';
+import { CopyToClipboard } from '../CopyToClipboard';
+import { ChakraModal } from '../ChakraModal';
+import { IAssignRoleTypes } from 'src/store/defaultSlice/slice/types';
+import { actions as defaultActions } from '../../store/defaultSlice/slice';
 
 interface Props extends TableProps {
   data: any[] | undefined;
@@ -39,6 +52,13 @@ const StyledTableContainer = styled(TableContainer)({
 
 export const ChakraTable = ({ data, ...rest }: Props) => {
   const connectedAccount = useSelector(selectConnectedAccount);
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const [formValue, setFormValue] = useState<IAssignRoleTypes>({
+    address: '',
+    roleName: '',
+  });
+  const dispatch = useDispatch();
+  const stateData = useSelector(selectAllDefaultSlice);
   return (
     <StyledTableContainer
       border={rest.border || '1px'}
@@ -60,21 +80,18 @@ export const ChakraTable = ({ data, ...rest }: Props) => {
         <Tbody>
           {data?.map((item, index) => (
             <Tr key={index}>
-              <Td w="64">
+              <Td flexGrow={1}>
                 <Center justifyContent="flex-start">
                   <Text w="48" variant="truncated">
                     {item}
                   </Text>
-                  {/* <CopyToClipboard value={item.address} /> */}
+                  <CopyToClipboard value={item} />
                 </Center>
               </Td>
               <Td>
-                {/* <Link
-                  href={`https://goerli.etherscan.io/address/${item.address}`}
-                  target="_blank"
-                >
-                  Link
-                </Link> */}
+                <Button onClick={onOpen} colorScheme="teal">
+                  Assign Role
+                </Button>
               </Td>
             </Tr>
           ))}
@@ -94,6 +111,47 @@ export const ChakraTable = ({ data, ...rest }: Props) => {
           </Flex>
         ) : null}
       </Table>
+      <ChakraModal
+        loading={stateData.assigningRole}
+        actionText="Assign"
+        title="Assign role to an address"
+        isOpen={isOpen}
+        onClose={() => {
+          onClose(),
+            setFormValue({
+              address: '',
+              roleName: '',
+            });
+        }}
+        command={() => dispatch(defaultActions.assignRole(formValue))}
+      >
+        <FormControl>
+          <FormLabel>Role</FormLabel>
+          <Select
+            value={formValue.roleName}
+            onChange={e => {
+              setFormValue(prev => ({ ...prev, roleName: e.target.value }));
+            }}
+            placeholder="Select Role"
+          >
+            {stateData?.roles?.map((item, index) => (
+              <option key={index} value={item}>
+                {item}
+              </option>
+            ))}
+          </Select>
+
+          <FormLabel>Address</FormLabel>
+          <Input
+            required
+            value={formValue.address}
+            onChange={e =>
+              setFormValue(prev => ({ ...prev, address: e.target.value }))
+            }
+            placeholder="Address"
+          />
+        </FormControl>
+      </ChakraModal>
     </StyledTableContainer>
   );
 };
