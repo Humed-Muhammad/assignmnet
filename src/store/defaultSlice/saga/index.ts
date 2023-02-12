@@ -3,9 +3,13 @@ import { actions } from '../slice';
 
 import { ethereum } from '../../../utils/constant';
 import { ethers, Signer } from 'ethers';
-import { getLotteryData } from '../../../utils/helpers';
-import { selectConnectedAccount } from '../slice/selector';
-import { IGetContractDataTypes } from '../slice/types';
+import { getSmartContractData } from '../../../utils/helpers';
+import {
+  selectAllDefaultSlice,
+  selectConnectedAccount,
+} from '../slice/selector';
+import { DefaultSliceTypes, IGetContractDataTypes } from '../slice/types';
+import { PayloadAction } from '@reduxjs/toolkit';
 
 /* This function is responsible for checking if the user has connected their wallet. */
 function* checkIfWalletIsConnectedSaga() {
@@ -82,7 +86,7 @@ function* requestWalletConnectionsSaga() {
 function* getContractData() {
   try {
     /* Creating a provider for the ethers.js library. */
-    const provider: { getSigner: () => object } =
+    const provider: ethers.providers.Web3Provider =
       yield new ethers.providers.Web3Provider(ethereum);
 
     const connectedAccount: string = yield select(selectConnectedAccount);
@@ -91,7 +95,7 @@ function* getContractData() {
     const signer: Signer = yield provider.getSigner();
 
     /***@Data From Contract */
-    const data: IGetContractDataTypes = yield getLotteryData({
+    const data: IGetContractDataTypes = yield getSmartContractData({
       signer,
       connectedAccount,
     });
@@ -127,6 +131,18 @@ function* getContractData() {
   }
 }
 
+function* createRoleSaga(action: PayloadAction<string>) {
+  try {
+    const stateData: DefaultSliceTypes = yield select(selectAllDefaultSlice);
+    const tsxResponse = yield stateData?.contract?.addRoleType(action.payload);
+    console.log(tsxResponse);
+    yield put(actions.finishedCreatingRole());
+  } catch (error) {
+    yield put(actions.finishedCreatingRole());
+    console.log(error);
+  }
+}
+
 export function* defaultLotterySaga() {
   yield takeLatest(
     actions.requestWalletConnection.type,
@@ -137,4 +153,5 @@ export function* defaultLotterySaga() {
     checkIfWalletIsConnectedSaga,
   );
   yield takeLatest(actions.requestContract.type, getContractData);
+  yield takeLatest(actions.createRole.type, createRoleSaga);
 }
