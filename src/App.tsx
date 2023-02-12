@@ -1,15 +1,18 @@
 import {
   Button,
   Card,
-  Container,
-  Flex,
-  Link,
+  FormControl,
+  FormLabel,
+  IconButton,
+  Input,
+  useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { actions as defaultActions } from './store/defaultSlice/slice';
 import {
+  selectAllDefaultSlice,
   selectConnectedAccount,
   selectConnectingWallet,
   selectMessage,
@@ -22,15 +25,20 @@ import {
 import { motion } from 'framer-motion';
 import LoadingDots from './components/Core/icons/loading-dots';
 import Balancer from 'react-wrap-balancer';
-import { Layers } from 'react-feather';
 import { Layout } from './Layout';
 import { ChakraTable } from './components/Core/ChakraTable';
+import { Stats } from './components/Stats';
+import { Plus } from 'react-feather';
+import { ChakraModal } from './components/ChakraModal';
 
 function App() {
+  const [roleName, setRoleName] = useState<string>('');
+  const { isOpen, onClose, onOpen } = useDisclosure();
   const toast = useToast();
   const connectedAccount = useSelector(selectConnectedAccount);
   const message = useSelector(selectMessage);
   const connectingWallet = useSelector(selectConnectingWallet);
+  const stateData = useSelector(selectAllDefaultSlice);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(defaultActions.checkIfWalletIsConnected());
@@ -55,6 +63,7 @@ function App() {
             description: message.content,
             variant: 'subtle',
             status: 'error',
+            position: 'bottom-right',
           });
           break;
         case 'success':
@@ -62,6 +71,7 @@ function App() {
             description: message.content,
             variant: 'subtle',
             status: 'success',
+            position: 'bottom-right',
           });
           break;
         case 'warning':
@@ -69,6 +79,7 @@ function App() {
             description: message.content,
             variant: 'subtle',
             status: 'warning',
+            position: 'bottom-right',
           });
           break;
         case 'info':
@@ -76,6 +87,7 @@ function App() {
             description: message.content,
             variant: 'subtle',
             status: 'info',
+            position: 'bottom-right',
           });
           break;
       }
@@ -89,6 +101,7 @@ function App() {
       );
     };
   }, [message.content]);
+
   return (
     <Layout>
       <motion.div
@@ -149,12 +162,40 @@ function App() {
 
       <motion.div
         variants={FADE_DOWN_ANIMATION_VARIANTS}
-        className="my-5 flex h-96 w-11/12 animate-[slide-down-fade_0.5s_ease-in-out] flex-col items-center md:w-2/3 xl:px-0"
+        className="my-5 flex h-auto w-11/12 animate-[slide-down-fade_0.5s_ease-in-out] flex-col items-center md:w-2/3 xl:px-0"
       >
-        <Card width={['full']}>
-          <ChakraTable />
+        <Stats />
+        <Card p={10} width={['full']}>
+          <IconButton
+            onClick={onOpen}
+            m={2}
+            icon={<Plus />}
+            aria-label="Create role"
+            width={25}
+          />
+          <ChakraTable
+            emptyText="There is no any role yet!."
+            data={stateData.roles}
+          />
         </Card>
       </motion.div>
+      <ChakraModal
+        command={() => {
+          dispatch(defaultActions.createRole(roleName));
+        }}
+        isOpen={isOpen}
+        onClose={onClose}
+        title="Create role"
+      >
+        <FormControl>
+          <FormLabel>Role name</FormLabel>
+          <Input
+            value={roleName}
+            onChange={e => setRoleName(e.target.value)}
+            placeholder="Role name"
+          />
+        </FormControl>
+      </ChakraModal>
     </Layout>
   );
 }

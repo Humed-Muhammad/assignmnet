@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Center,
-  Link,
+  Flex,
   Spinner,
   Table,
   TableContainer,
@@ -13,13 +13,14 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
-// import { TableDataTypes } from '../../utils/types';
+import { CloudOff } from 'react-feather';
 import styled from '@emotion/styled';
 import { selectConnectedAccount } from '../../store/defaultSlice/slice/selector';
 import { useSelector } from 'react-redux';
 
 interface Props extends TableProps {
   data: any[] | undefined;
+  emptyText?: string;
 }
 
 const StyledTableContainer = styled(TableContainer)({
@@ -62,18 +63,18 @@ export const ChakraTable = ({ data, ...rest }: Props) => {
               <Td w="64">
                 <Center justifyContent="flex-start">
                   <Text w="48" variant="truncated">
-                    {item.address}
+                    {item}
                   </Text>
                   {/* <CopyToClipboard value={item.address} /> */}
                 </Center>
               </Td>
               <Td>
-                <Link
+                {/* <Link
                   href={`https://goerli.etherscan.io/address/${item.address}`}
                   target="_blank"
                 >
                   Link
-                </Link>
+                </Link> */}
               </Td>
             </Tr>
           ))}
@@ -81,7 +82,17 @@ export const ChakraTable = ({ data, ...rest }: Props) => {
         {!data && connectedAccount ? (
           <Spinner position="absolute" bottom="50%" right="50%" />
         ) : null}
-        {!data?.length && data ? <Text>No participants yet!</Text> : null}
+        {!data?.length && data ? (
+          <Flex
+            experimental_spaceX={3}
+            alignItems="center"
+            position="absolute"
+            bottom="50%"
+            right="50%"
+          >
+            <CloudOff /> <Text>{rest.emptyText || 'No data'}</Text>
+          </Flex>
+        ) : null}
       </Table>
     </StyledTableContainer>
   );
