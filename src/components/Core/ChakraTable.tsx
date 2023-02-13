@@ -1,11 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  Button,
   Center,
   Flex,
-  FormControl,
-  FormLabel,
-  Input,
+  IconButton,
   Select,
   Spinner,
   Table,
@@ -19,7 +16,7 @@ import {
   Tr,
   useDisclosure,
 } from '@chakra-ui/react';
-import { CloudOff } from 'react-feather';
+import { CloudOff, Edit } from 'react-feather';
 import styled from '@emotion/styled';
 import {
   selectAllDefaultSlice,
@@ -27,13 +24,17 @@ import {
 } from '../../store/defaultSlice/slice/selector';
 import { useDispatch, useSelector } from 'react-redux';
 import { CopyToClipboard } from '../CopyToClipboard';
+import { TooltipHolder } from './Tooltip';
 import { ChakraModal } from '../ChakraModal';
-import { IAssignRoleTypes } from 'src/store/defaultSlice/slice/types';
-import { actions as defaultActions } from '../../store/defaultSlice/slice';
+import { IChangeRoleTypes } from 'src/store/defaultSlice/slice/types';
+import { actions } from '../../store/defaultSlice/slice';
+
+import { gasLimit } from '../../utils/constant';
 
 interface Props extends TableProps {
   data: any[] | undefined;
   emptyText?: string;
+  fromMembers?: boolean;
 }
 
 const StyledTableContainer = styled(TableContainer)({
@@ -52,13 +53,26 @@ const StyledTableContainer = styled(TableContainer)({
 
 export const ChakraTable = ({ data, ...rest }: Props) => {
   const connectedAccount = useSelector(selectConnectedAccount);
-  const { isOpen, onClose, onOpen } = useDisclosure();
-  const [formValue, setFormValue] = useState<IAssignRoleTypes>({
+  const stateData = useSelector(selectAllDefaultSlice);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [values, setValues] = useState<IChangeRoleTypes>({
     address: '',
-    roleName: '',
+    status: 'Activate',
   });
   const dispatch = useDispatch();
-  const stateData = useSelector(selectAllDefaultSlice);
+  const fetchSingleUserRole = async () => {
+    const transactionResponse: any[] = await stateData?.contract?.userRole(
+      values.address,
+      gasLimit,
+    );
+    setValues(prev => ({
+      ...prev,
+      status: transactionResponse?.[1] ? 'Activate' : 'Deactivate',
+    }));
+  };
+  useEffect(() => {
+    fetchSingleUserRole();
+  }, [isOpen]);
   return (
     <StyledTableContainer
       border={rest.border || '1px'}
@@ -74,6 +88,7 @@ export const ChakraTable = ({ data, ...rest }: Props) => {
         <Thead>
           <Tr>
             <Th>Roles</Th>
+            <Th>Actions</Th>
           </Tr>
         </Thead>
 
@@ -82,16 +97,25 @@ export const ChakraTable = ({ data, ...rest }: Props) => {
             <Tr key={index}>
               <Td flexGrow={1}>
                 <Center justifyContent="flex-start">
-                  <Text w="48" variant="truncated">
+                  <Text isTruncated w="56" variant="truncated">
                     {item}
                   </Text>
-                  <CopyToClipboard value={item} />
                 </Center>
               </Td>
               <Td>
-                <Button onClick={onOpen} colorScheme="teal">
-                  Assign Role
-                </Button>
+                <CopyToClipboard value={item} />
+                {rest.fromMembers && (
+                  <TooltipHolder label="Edit members status Activate/Deactivate">
+                    <IconButton
+                      onClick={() => {
+                        onOpen();
+                        setValues(prev => ({ ...prev, address: item }));
+                      }}
+                      aria-label="Edit members status"
+                      icon={<Edit />}
+                    />
+                  </TooltipHolder>
+                )}
               </Td>
             </Tr>
           ))}
@@ -112,45 +136,25 @@ export const ChakraTable = ({ data, ...rest }: Props) => {
         ) : null}
       </Table>
       <ChakraModal
-        loading={stateData.assigningRole}
-        actionText="Assign"
-        title="Assign role to an address"
         isOpen={isOpen}
-        onClose={() => {
-          onClose(),
-            setFormValue({
-              address: '',
-              roleName: '',
-            });
-        }}
-        command={() => dispatch(defaultActions.assignRole(formValue))}
+        onClose={onClose}
+        title="Change members status"
+        actionText="Ok"
+        loading={stateData.changingMembersStatus}
+        command={() => dispatch(actions.changeMembersStatus(values))}
       >
-        <FormControl>
-          <FormLabel>Role</FormLabel>
-          <Select
-            value={formValue.roleName}
-            onChange={e => {
-              setFormValue(prev => ({ ...prev, roleName: e.target.value }));
-            }}
-            placeholder="Select Role"
-          >
-            {stateData?.roles?.map((item, index) => (
-              <option key={index} value={item}>
-                {item}
-              </option>
-            ))}
-          </Select>
-
-          <FormLabel>Address</FormLabel>
-          <Input
-            required
-            value={formValue.address}
-            onChange={e =>
-              setFormValue(prev => ({ ...prev, address: e.target.value }))
-            }
-            placeholder="Address"
-          />
-        </FormControl>
+        <Select
+          onChange={e =>
+            setValues(prev => ({
+              ...prev,
+              status: e.target.value as 'Activate' | 'Deactivate',
+            }))
+          }
+          value={values?.status}
+        >
+          <option value={'Activate'}>Activate</option>
+          <option value={'Deactivate'}>Deactivate</option>
+        </Select>
       </ChakraModal>
     </StyledTableContainer>
   );

@@ -1,10 +1,17 @@
 import {
   Button,
   Card,
+  Flex,
   FormControl,
   FormLabel,
   IconButton,
   Input,
+  Select,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
@@ -31,10 +38,20 @@ import { Stats } from './components/Stats';
 import { Plus } from 'react-feather';
 import { ChakraModal } from './components/ChakraModal';
 import { useEventListener } from './utils/hooks';
+import { IAssignRoleTypes } from './store/defaultSlice/slice/types';
 
 function App() {
   const [roleName, setRoleName] = useState<string>('');
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const {
+    isOpen: isSecondOpen,
+    onClose: onCloseSecond,
+    onOpen: onOpenSecond,
+  } = useDisclosure();
+  const [formValue, setFormValue] = useState<IAssignRoleTypes>({
+    address: '',
+    roleName: '',
+  });
   const toast = useToast();
   const connectedAccount = useSelector(selectConnectedAccount);
   const message = useSelector(selectMessage);
@@ -53,7 +70,7 @@ function App() {
     if (connectedAccount) {
       dispatch(defaultActions.requestContract());
     }
-  }, [connectedAccount]);
+  }, [connectedAccount, stateData.assigningRole, stateData.creatingRole]);
 
   useEventListener();
 
@@ -168,17 +185,40 @@ function App() {
       >
         <Stats />
         <Card p={10} width={['full']}>
-          <IconButton
-            onClick={onOpen}
-            m={2}
-            icon={<Plus />}
-            aria-label="Create role"
-            width={25}
-          />
-          <ChakraTable
-            emptyText="There is no any role yet!."
-            data={stateData.roles}
-          />
+          <Flex justifyContent="space-between">
+            <IconButton
+              onClick={onOpen}
+              m={2}
+              icon={<Plus />}
+              aria-label="Create role"
+              width={25}
+            />
+            <Button onClick={onOpenSecond} colorScheme="gray">
+              Assign Role
+            </Button>
+          </Flex>
+          <Tabs variant="enclosed">
+            <TabList>
+              <Tab>Roles</Tab>
+              <Tab>Members</Tab>
+            </TabList>
+
+            <TabPanels>
+              <TabPanel>
+                <ChakraTable
+                  emptyText="There is no any role yet!."
+                  data={stateData.roles}
+                />
+              </TabPanel>
+              <TabPanel>
+                <ChakraTable
+                  emptyText="There is no any members with role yet!."
+                  data={stateData.usersAddress}
+                  fromMembers
+                />
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
         </Card>
       </motion.div>
       <ChakraModal
@@ -196,6 +236,52 @@ function App() {
             value={roleName}
             onChange={e => setRoleName(e.target.value)}
             placeholder="Role name"
+          />
+        </FormControl>
+      </ChakraModal>
+
+      {/***
+       * @ChakraModalTwo
+       *
+       * */}
+      <ChakraModal
+        loading={stateData.assigningRole}
+        actionText="Assign"
+        title="Assign role to an address"
+        isOpen={isSecondOpen}
+        onClose={() => {
+          onCloseSecond(),
+            setFormValue({
+              address: '',
+              roleName: '',
+            });
+        }}
+        command={() => dispatch(defaultActions.assignRole(formValue))}
+      >
+        <FormControl>
+          <FormLabel>Role</FormLabel>
+          <Select
+            value={formValue.roleName}
+            onChange={e => {
+              setFormValue(prev => ({ ...prev, roleName: e.target.value }));
+            }}
+            placeholder="Select Role"
+          >
+            {stateData?.roles?.map((item, index) => (
+              <option key={index} value={item}>
+                {item}
+              </option>
+            ))}
+          </Select>
+
+          <FormLabel>Address</FormLabel>
+          <Input
+            required
+            value={formValue.address}
+            onChange={e =>
+              setFormValue(prev => ({ ...prev, address: e.target.value }))
+            }
+            placeholder="Address"
           />
         </FormControl>
       </ChakraModal>

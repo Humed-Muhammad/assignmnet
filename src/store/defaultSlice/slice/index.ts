@@ -5,6 +5,7 @@ import { MessageTypes } from '../../commonTypes';
 import {
   DefaultSliceTypes,
   IAssignRoleTypes,
+  IChangeRoleTypes,
   IGetContractDataTypes,
 } from './types';
 
@@ -26,6 +27,7 @@ const initialState: DefaultSliceTypes = {
   roleTypesCount: undefined,
   creatingRole: false,
   assigningRole: false,
+  changingMembersStatus: false,
 };
 
 export const defaultSlice = createSlice({
@@ -81,6 +83,12 @@ export const defaultSlice = createSlice({
     },
     finishedAssigningRole: state => {
       state.assigningRole = false;
+    },
+    changeMembersStatus: (state, action: PayloadAction<IChangeRoleTypes>) => {
+      state.changingMembersStatus = true;
+    },
+    finishedChangingMembersStatus: state => {
+      state.changingMembersStatus = false;
     },
   },
 });

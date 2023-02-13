@@ -20,7 +20,7 @@ export const CopyToClipboard = ({ value }: Props) => {
         color="gray.600"
         rounded="full"
         aria-label="copy to clipboard"
-        icon={copyed ? <Check size={20} /> : <Copy size={20} />}
+        icon={copyed ? <Check size={20} color="green" /> : <Copy size={20} />}
       />
     </TooltipHolder>
   );
