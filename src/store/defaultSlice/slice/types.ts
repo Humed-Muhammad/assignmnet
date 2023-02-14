@@ -35,4 +35,5 @@ export interface IAssignRoleTypes {
 export interface IChangeRoleTypes {
   status: 'Activate' | 'Deactivate';
   address: string;
+  isActive?: boolean | undefined;
 }

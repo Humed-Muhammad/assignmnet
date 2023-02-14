@@ -1,10 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import {
+  Box,
+  Card,
+  CardBody,
+  CardHeader,
   Center,
+  Divider,
   Flex,
+  FormLabel,
+  Heading,
+  Highlight,
   IconButton,
   Select,
   Spinner,
+  Stack,
+  StackDivider,
   Table,
   TableContainer,
   TableProps,
@@ -58,6 +68,7 @@ export const ChakraTable = ({ data, ...rest }: Props) => {
   const [values, setValues] = useState<IChangeRoleTypes>({
     address: '',
     status: 'Activate',
+    isActive: true,
   });
   const dispatch = useDispatch();
   const fetchSingleUserRole = async () => {
@@ -65,14 +76,16 @@ export const ChakraTable = ({ data, ...rest }: Props) => {
       values.address,
       gasLimit,
     );
+
     setValues(prev => ({
       ...prev,
       status: transactionResponse?.[1] ? 'Activate' : 'Deactivate',
+      isActive: transactionResponse?.[1],
     }));
   };
   useEffect(() => {
     fetchSingleUserRole();
-  }, [isOpen]);
+  }, [isOpen, stateData.changingMembersStatus]);
   return (
     <StyledTableContainer
       border={rest.border || '1px'}
@@ -143,6 +156,43 @@ export const ChakraTable = ({ data, ...rest }: Props) => {
         loading={stateData.changingMembersStatus}
         command={() => dispatch(actions.changeMembersStatus(values))}
       >
+        <Card>
+          <CardHeader>
+            <Heading size="md">Member Detail</Heading>
+          </CardHeader>
+
+          <CardBody>
+            <Stack divider={<StackDivider />} spacing="4">
+              <Box>
+                <Heading size="xs" textTransform="uppercase">
+                  Address
+                </Heading>
+                <Center justifyContent="flex-start">
+                  <Text isTruncated width={'48'} pt="2" fontSize="sm">
+                    {values.address}
+                  </Text>
+                  <CopyToClipboard value={values.address} />
+                </Center>
+              </Box>
+              <Box>
+                <Heading size="xs" textTransform="uppercase">
+                  Status
+                </Heading>
+                <Text color={'red'} pt="2" fontSize="sm">
+                  {values.isActive ? (
+                    <Highlight styles={{ color: 'green' }} query={'Active'}>
+                      Active
+                    </Highlight>
+                  ) : (
+                    'Inactive'
+                  )}
+                </Text>
+              </Box>
+            </Stack>
+          </CardBody>
+        </Card>
+        <Divider />
+        <FormLabel mt={4}>Select status</FormLabel>
         <Select
           onChange={e =>
             setValues(prev => ({
