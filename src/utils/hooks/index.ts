@@ -4,6 +4,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { actions as defaultActions } from '../../store/defaultSlice/slice';
 import { selectAllDefaultSlice } from '../../store/defaultSlice/slice/selector';
 
+/**
+ * "useScroll returns a boolean that is true if the user has scrolled past a certain threshold."
+ *
+ * Let's break down the function
+ * @param {number} threshold - The number of pixels from the top of the page that the user has to
+ * scroll down before the component is considered to be scrolled.
+ * @returns A boolean value that is true if the window has been scrolled past the threshold.
+ */
 export default function useScroll(threshold: number) {
   const [scrolled, setScrolled] = useState(false);
 
@@ -19,6 +27,11 @@ export default function useScroll(threshold: number) {
   return scrolled;
 }
 
+/**
+ * It returns a boolean value that indicates whether the value has been copied to the clipboard or not,
+ * and a function that copies the value to the clipboard
+ * @returns An object with two properties: copyed and copyToClipboard.
+ */
 export const useCopyToClipboard = () => {
   const toast = useToast();
   const [copyed, setCopyed] = useState(false);
@@ -48,6 +61,9 @@ export const useCopyToClipboard = () => {
   };
 };
 
+/**
+ * It listens for events from the contract and dispatches an action to update the contract state
+ */
 export const useEventListener = () => {
   const dispatch = useDispatch();
   const { contract, assigningRole, creatingRole } = useSelector(
