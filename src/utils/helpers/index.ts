@@ -18,7 +18,7 @@ export const getSmartContractData = async (
   data: GetLotteryResponseType,
 ): Promise<IGetContractDataTypes> => {
   const contract: Contract = new ethers.Contract(
-    import.meta.env.VITE_LOCAL_CONTRACT_ADDRESS,
+    import.meta.env.VITE_PROD_CONTRACT_ADDRESS,
     MemberRole.abi,
     data.signer,
   );
