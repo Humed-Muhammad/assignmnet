@@ -72,11 +72,12 @@ function* requestWalletConnectionsSaga() {
           type: 'warning',
         }),
       );
+    } else {
+      yield ethereum.request({
+        method: 'eth_requestAccounts',
+      });
+      yield put(actions.finishedWalletConnection());
     }
-    yield ethereum.request({
-      method: 'eth_requestAccounts',
-    });
-    yield put(actions.finishedWalletConnection());
   } catch ({ message }) {
     yield put(
       actions.setMessages({
