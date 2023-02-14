@@ -39,6 +39,7 @@ import { Plus } from 'react-feather';
 import { ChakraModal } from './components/ChakraModal';
 import { useEventListener } from './utils/hooks';
 import { IAssignRoleTypes } from './store/defaultSlice/slice/types';
+import { TooltipHolder } from './components/Core/Tooltip';
 
 function App() {
   const [roleName, setRoleName] = useState<string>('');
@@ -186,13 +187,15 @@ function App() {
         <Stats />
         <Card p={10} width={['full']}>
           <Flex justifyContent="space-between">
-            <IconButton
-              onClick={onOpen}
-              m={2}
-              icon={<Plus />}
-              aria-label="Create role"
-              width={25}
-            />
+            <TooltipHolder label="Create new role">
+              <IconButton
+                onClick={onOpen}
+                m={2}
+                icon={<Plus />}
+                aria-label="Create role"
+                width={25}
+              />
+            </TooltipHolder>
             <Button onClick={onOpenSecond} colorScheme="gray">
               Assign Role
             </Button>
@@ -274,7 +277,7 @@ function App() {
             ))}
           </Select>
 
-          <FormLabel mt={2}>Address</FormLabel>
+          <FormLabel mt={2}>Wallet Address</FormLabel>
           <Input
             required
             value={formValue.address}

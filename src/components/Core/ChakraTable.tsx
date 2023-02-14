@@ -100,7 +100,7 @@ export const ChakraTable = ({ data, ...rest }: Props) => {
       <Table variant="striped" colorScheme="gray">
         <Thead>
           <Tr>
-            <Th>Roles</Th>
+            <Th>{rest.fromMembers ? 'Members address' : 'Roles'}</Th>
             <Th>Actions</Th>
           </Tr>
         </Thead>
@@ -165,7 +165,7 @@ export const ChakraTable = ({ data, ...rest }: Props) => {
             <Stack divider={<StackDivider />} spacing="4">
               <Box>
                 <Heading size="xs" textTransform="uppercase">
-                  Address
+                  Wallet Address
                 </Heading>
                 <Center justifyContent="flex-start">
                   <Text isTruncated width={'48'} pt="2" fontSize="sm">
