@@ -153,7 +153,8 @@ function* createRoleSaga(action: PayloadAction<string>) {
   } catch (error) {
     yield put(
       actions.setMessages({
-        content: 'Error occurred, please make sure you have a valid inputs',
+        content:
+          'Error occurred, please make sure you have a valid inputs or an owner',
         type: 'warning',
       }),
     );
@@ -182,7 +183,8 @@ function* assignRoleSaga(action: PayloadAction<IAssignRoleTypes>) {
     yield put(actions.finishedAssigningRole());
     yield put(
       actions.setMessages({
-        content: 'Error occurred, please make sure you have a valid inputs',
+        content:
+          'Error occurred, please make sure you have a valid inputs or an owner.',
         type: 'warning',
       }),
     );
