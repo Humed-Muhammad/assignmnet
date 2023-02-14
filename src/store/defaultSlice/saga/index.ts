@@ -76,8 +76,8 @@ function* requestWalletConnectionsSaga() {
       yield ethereum.request({
         method: 'eth_requestAccounts',
       });
-      yield put(actions.finishedWalletConnection());
     }
+    yield put(actions.finishedWalletConnection());
   } catch ({ message }) {
     yield put(
       actions.setMessages({
