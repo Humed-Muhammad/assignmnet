@@ -8,6 +8,11 @@ import { TooltipHolder } from './Core/Tooltip';
 interface Props {
   value: string | undefined;
 }
+/**
+ * It's a button that copies the value passed to it to the clipboard
+ * @param {Props}  - `value` - the value to copy to the clipboard
+ * @returns A component that is a button with an icon.
+ */
 export const CopyToClipboard = ({ value }: Props) => {
   const { copyToClipboard, copyed } = useCopyToClipboard();
   return (

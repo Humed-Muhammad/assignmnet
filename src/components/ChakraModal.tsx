@@ -23,6 +23,12 @@ interface Props {
   actionText?: string;
 }
 
+/**
+ * It's a modal that takes in a title, children, and a command to run when the user clicks the action
+ * button
+ * @param {Props}  - isOpen - boolean - whether the modal is open or not
+ * @returns A modal component
+ */
 export function ChakraModal({
   isOpen,
   actionText = 'Create',

@@ -11,6 +11,9 @@ import {
 import { useSelector } from 'react-redux';
 import { selectAllDefaultSlice } from '../store/defaultSlice/slice/selector';
 
+/**
+ * It's a React component that renders a component statics of the smart contract
+ */
 export const Stats = () => {
   const stateData = useSelector(selectAllDefaultSlice);
   return (

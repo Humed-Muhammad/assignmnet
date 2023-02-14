@@ -7,6 +7,11 @@ export interface GetLotteryResponseType {
   connectedAccount: string;
 }
 
+/**
+ * It takes a value, checks if it's defined, and if it is, it formats it as an ether value.
+ * @param {BigNumberish | undefined} value - The value to be formatted.
+ * @returns A string
+ */
 export const formatEther = (value: BigNumberish | undefined) => {
   if (value) {
     const result = ethers.utils.formatEther(value);
@@ -14,6 +19,11 @@ export const formatEther = (value: BigNumberish | undefined) => {
   }
 };
 
+/**
+ * It helper function that fetch smart contracts data when the ui is ready
+ * @param {GetLotteryResponseType} data - GetLotteryResponseType - this is the response from the
+ * getLottery function.
+ */
 export const getSmartContractData = async (
   data: GetLotteryResponseType,
 ): Promise<IGetContractDataTypes> => {
