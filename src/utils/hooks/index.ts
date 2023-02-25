@@ -2,7 +2,10 @@ import { useToast } from '@chakra-ui/react';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { actions as defaultActions } from '../../store/defaultSlice/slice';
-import { selectAllDefaultSlice } from '../../store/defaultSlice/slice/selector';
+import {
+  selectAllDefaultSlice,
+  selectMessage,
+} from '../../store/defaultSlice/slice/selector';
 
 /**
  * "useScroll returns a boolean that is true if the user has scrolled past a certain threshold."
@@ -78,4 +81,56 @@ export const useEventListener = () => {
       dispatch(defaultActions.requestContract());
     });
   }, [assigningRole, creatingRole]);
+};
+
+export const useInitToast = () => {
+  const toast = useToast();
+  const message = useSelector(selectMessage);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (message.content) {
+      switch (message.type) {
+        case 'error':
+          toast({
+            description: message.content,
+            variant: 'subtle',
+            status: 'error',
+            position: 'bottom-right',
+          });
+          break;
+        case 'success':
+          toast({
+            description: message.content,
+            variant: 'subtle',
+            status: 'success',
+            position: 'bottom-right',
+          });
+          break;
+        case 'warning':
+          toast({
+            description: message.content,
+            variant: 'subtle',
+            status: 'warning',
+            position: 'bottom-right',
+          });
+          break;
+        case 'info':
+          toast({
+            description: message.content,
+            variant: 'subtle',
+            status: 'info',
+            position: 'bottom-right',
+          });
+          break;
+      }
+    }
+    return () => {
+      dispatch(
+        defaultActions.setMessages({
+          content: '',
+          type: null,
+        }),
+      );
+    };
+  }, [message.content]);
 };
