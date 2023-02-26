@@ -56,8 +56,8 @@ function App() {
         <Stats />
         <TableTabList onOpen={onOpen} onOpenSecond={onOpenSecond} />
       </motion.div>
-      <Roles onClose={onClose} isOpen={isOpen} />
 
+      <Roles onClose={onClose} isOpen={isOpen} />
       <Members
         isMembersModalOpen={isMembersModalOpen}
         onCloseMembersModal={onCloseMembersModal}

@@ -23,5 +23,5 @@ export const FADE_UP_ANIMATION_VARIANTS = {
 
 export const gasLimit = {
   gasLimit: 6000000,
-  gasPrice: ethers.utils.parseUnits('20', 'gwei'),
+  gasPrice: ethers.utils.parseUnits('10', 'gwei'),
 };
