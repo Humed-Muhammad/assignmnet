@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import { FormControl, FormLabel, Input } from '@chakra-ui/react';
+import React from 'react';
+import { FormControl, FormLabel, Input, Text } from '@chakra-ui/react';
 import { ChakraModal } from './ChakraModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAllDefaultSlice } from '../store/defaultSlice/slice/selector';
 import { actions as defaultActions } from '../store/defaultSlice/slice';
+import { ErrorMessage, Formik } from 'formik';
+import { roleValidation } from '../utils/validation';
 
 interface Props {
   isOpen: boolean;
@@ -11,27 +13,47 @@ interface Props {
 }
 
 export const Roles = ({ isOpen, onClose }: Props) => {
-  const [roleName, setRoleName] = useState<string>('');
   const stateData = useSelector(selectAllDefaultSlice);
   const dispatch = useDispatch();
   return (
-    <ChakraModal
-      loading={stateData.creatingRole}
-      command={() => {
-        dispatch(defaultActions.createRole(roleName));
+    <Formik
+      initialValues={{ roleName: '' }}
+      onSubmit={values => {
+        dispatch(defaultActions.createRole(values.roleName));
       }}
-      isOpen={isOpen}
-      onClose={onClose}
-      title="Create role"
+      validationSchema={roleValidation}
     >
-      <FormControl>
-        <FormLabel>Role name</FormLabel>
-        <Input
-          value={roleName}
-          onChange={e => setRoleName(e.target.value)}
-          placeholder="Role name"
-        />
-      </FormControl>
-    </ChakraModal>
+      {({ handleSubmit, touched, handleChange, values, handleReset }) => (
+        <ChakraModal
+          loading={stateData.creatingRole}
+          command={handleSubmit}
+          isOpen={isOpen}
+          onClose={() => {
+            onClose();
+            handleReset();
+          }}
+          title="Create role"
+        >
+          <FormControl>
+            <FormLabel>Role name</FormLabel>
+            <Input
+              value={values.roleName}
+              onChange={handleChange}
+              placeholder="Role name"
+              name="roleName"
+            />
+            {touched.roleName && (
+              <ErrorMessage name="roleName">
+                {message => (
+                  <Text color="red.400" fontSize="sm">
+                    {message}
+                  </Text>
+                )}
+              </ErrorMessage>
+            )}
+          </FormControl>
+        </ChakraModal>
+      )}
+    </Formik>
   );
 };

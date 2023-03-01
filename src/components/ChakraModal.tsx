@@ -52,6 +52,7 @@ export function ChakraModal({
               onClick={command}
               colorScheme={loading ? 'gray' : 'green'}
               mr={3}
+              isDisabled={loading}
             >
               {loading ? (
                 <Center>
