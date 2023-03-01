@@ -28,17 +28,21 @@
     "@emotion/styled": "^11.10.5",
     "@reduxjs/toolkit": "^1.9.2",
     "ethers": "5.7.2",
+    "formik": "^2.2.9",
     "framer-motion": "^9.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-feather": "^2.0.10",
     "react-redux": "^8.0.5",
     "react-wrap-balancer": "^0.4.0",
-    "redux-saga": "^1.2.2"
+    "redux-saga": "^1.2.2",
+    "yup": "^1.0.2"
   },
   "devDependencies": {
     "@tailwindcss/line-clamp": "^0.4.2",
     "@tailwindcss/typography": "^0.5.9",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^14.0.0",
     "@types/node": "^18.11.3",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
